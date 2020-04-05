@@ -7,11 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ksiegarnia", "Ksiegarnia\Ks
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dokumentacja", "Dokumentacja\Dokumentacja.csproj", "{1CCFE2B5-80FD-4A0F-9360-7090114CBFDA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ksiegarnia.DataAccess", "Ksiegarnia.DataAccess\Ksiegarnia.DataAccess.csproj", "{DCCA3F72-BF42-4A0F-88CE-781C6EDA506F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ksiegarnia.DataAccess", "Ksiegarnia.DataAccess\Ksiegarnia.DataAccess.csproj", "{DCCA3F72-BF42-4A0F-88CE-781C6EDA506F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ksiegarnia.Models", "Ksiegarnia.Models\Ksiegarnia.Models.csproj", "{71C35ACD-A7A6-4B5C-A1AC-0F3867082AC3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ksiegarnia.Models", "Ksiegarnia.Models\Ksiegarnia.Models.csproj", "{71C35ACD-A7A6-4B5C-A1AC-0F3867082AC3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ksiegarnia.Utility", "Ksiegarnia.Utility\Ksiegarnia.Utility.csproj", "{55A41524-6FB9-4710-9BB9-06C5D9FC0039}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ksiegarnia.Utility", "Ksiegarnia.Utility\Ksiegarnia.Utility.csproj", "{55A41524-6FB9-4710-9BB9-06C5D9FC0039}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
