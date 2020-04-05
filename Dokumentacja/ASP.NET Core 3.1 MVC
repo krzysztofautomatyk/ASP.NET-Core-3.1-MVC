@@ -56,3 +56,23 @@ Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation -> paczka odpowiedzialna za to
 24. W projekcie "Ksiegarnia" przenoszę katalog "~\Views\Home" do "~\Areas\Customer\Views"
 25. W projekcie "Ksiegarnia" w pliku "~\Areas\Customer\Controllers\HomeController.cs" zmieniam namespace na: 
   - Ksiegarnia.Areas.Customer.Controllers
+26. W projekcie "Ksiegarnia" kopiuje pliki:
+  - "~\Views\_ViewImports.cshtml"
+  - "~\Views\_ViewStart.cshtml"
+    do katalogu:
+  - "~\Areas\Customer\Views"
+27. W projekcie "Ksiegarnia" edytuje plik "~\Areas\Customer\Views\_ViewStart.cshtml" i zmieniam wpis "Layout" z
+   "Layout = "_Layout";" na "Layout = "~/Views/Shared/_Layout.cshtml";"
+28. W projekcie "Ksiegarnia" dodaje Area "Admin"
+29. W projekcie "Ksiegarnia" w usuwam katalogi:
+   - "~\Areas\Admin\Data" 
+   - "~\Areas\Admin\Models" 
+30. W projekcie "Ksiegarnia" kopiuje pliki:
+  - "~\Areas\Customer\Views\_ViewImports.cshtml"
+  - "~\Areas\Customer\Views\_ViewStart.cshtml"
+    do katalogu:
+  - "~\Areas\Admin\Views"
+31. W projekcie "Ksiegarnia" usuwam katalog:
+  - "~\Controllers"
+32. W projekcie "Ksiegarnia" usuwam plik:
+  - "~\ScaffoldingReadMe.txt"
