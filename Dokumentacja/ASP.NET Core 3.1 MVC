@@ -1,0 +1,28 @@
+﻿<! ASP.NET Core 3.1 MVC - kurs z Udemy !>
+
+
+!----------------------------------------
+! Paczki NUGET
+!----------------------------------------
+Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation -> paczka odpowiedzialna za to, że po zapisaniu zmian w projekcie,
+                                                    należy tylko odświeżyć przeglądarkę.
+                                                    W pliku "Startup.cs" należy zmienić w serwisie wpis:
+                                                    z "services.AddControllersWithViews();"
+                                                    na "services.AddControllersWithViews().AddRazorRuntimeCompilation();"
+
+
+1. Instalujemy paczkę: Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation
+2. Dodajemy 3 nowe projekty typu: "Class library" i kasujemy z każdego projektu pliki "Class1.cs"
+  - Ksiegarnia.DataAccess
+  - Ksiegarnia.Models
+  - Ksiegarnia.Utility
+4. Przenosimy z głównego projektu[Ksiegarnia] katalog "Data" do projektu "Ksiegarnia.DataAccess"
+5. W projekcie "Ksiegarnia.DataAccess" instalujemy paczki: 
+  - Microsoft.EntityFrameworkCore.Relational
+  - Microsoft.EntityFrameworkCore.SqlServer -> użyj lokalnej wersji...  
+  - Microsoft.AspNetCore.Identity.EntityFrameworkCore -> użyj lokalnej wersji...  
+6. W projekcie "Ksiegarnia.DataAccess" usuwamy wszystkie pliki w katalogu: "~\Data\Migrations\"
+7. W projekcie "Ksiegarnia.DataAccess" w pliku "ApplicationDbContext.cs" zmieniam namespace na: 
+  - Ksiegarnia.DataAccess.Data
+8. W projekcie "Ksiegarnia" w pliku "Startup.cs" usuwam "using Ksiegarnia.Data" i dodajemy 
+"using Ksiegarnia.DataAccess.Data".
