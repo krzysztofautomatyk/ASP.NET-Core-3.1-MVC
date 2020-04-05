@@ -16,7 +16,7 @@ Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation -> paczka odpowiedzialna za to
   - Ksiegarnia.DataAccess
   - Ksiegarnia.Models
   - Ksiegarnia.Utility
-4. Przenosimy z głównego projektu[Ksiegarnia] katalog "Data" do projektu "Ksiegarnia.DataAccess"
+4. Przenosimy z projektu "Ksiegarnia" katalog "Data" do projektu "Ksiegarnia.DataAccess"
 5. W projekcie "Ksiegarnia.DataAccess" instalujemy paczki: 
   - Microsoft.EntityFrameworkCore.Relational
   - Microsoft.EntityFrameworkCore.SqlServer -> użyj lokalnej wersji...  
@@ -24,5 +24,23 @@ Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation -> paczka odpowiedzialna za to
 6. W projekcie "Ksiegarnia.DataAccess" usuwamy wszystkie pliki w katalogu: "~\Data\Migrations\"
 7. W projekcie "Ksiegarnia.DataAccess" w pliku "ApplicationDbContext.cs" zmieniam namespace na: 
   - Ksiegarnia.DataAccess.Data
-8. W projekcie "Ksiegarnia" w pliku "Startup.cs" usuwam "using Ksiegarnia.Data" i dodajemy 
-"using Ksiegarnia.DataAccess.Data".
+8. W projekcie "Ksiegarnia" w pliku "~\Startup.cs" usuwam "using Ksiegarnia.Data;" i dodajemy 
+   "using Ksiegarnia.DataAccess.Data;".
+9. Przenosimy z projektu "Ksiegarnia" plik "~\Models\ErrorViewModel.cs" do projektu "Ksiegarnia.Models"
+10. W projekcie "Ksiegarnia" usuwam katalog "~\Models"
+11. W projekcie "Ksiegarnia.Models" dodaje katalog "~\ViewModels" i przenoszę do niego plik "~\ErrorViewModel.cs"
+12. W projekcie "Ksiegarnia.Models" w pliku "~\ViewModels\ErrorViewModel.cs" zmieniam namespace na: 
+  - Ksiegarnia.Models.ViewModels
+13. W projekcie "Ksiegarnia" w pliku "~\Controllers\HomeController.cs" usuwam "using Ksiegarnia.Models;" 
+    i naprawiam brakujący namespace w "ErrorViewModel".
+14. W projekcie "Ksiegarnia" w pliku "~\Views\Shared\_ViewImports.cshtml" usuwam "@using Ksiegarnia.Models;" 
+    i dodajemy "@using Ksiegarnia.Models.ViewModels;".
+15. W projekcie "Ksiegarnia.Utility" dodaje klase "~\SD.cs" i zmieniam ją na "public static"
+16. W projekcie "Ksiegarnia" dodaje referencje do:
+  - Ksiegarnia.DataAccess
+  - Ksiegarnia.Models
+  - Ksiegarnia.Utility
+17. W projekcie "Ksiegarnia.DataAccess" dodaje referencje do:
+  - Ksiegarnia.Models
+  - Ksiegarnia.Utility
+18. W projekcie "Ksiegarnia" dodaje Area "Customer"

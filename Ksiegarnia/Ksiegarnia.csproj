@@ -17,6 +17,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Ksiegarnia.DataAccess\Ksiegarnia.DataAccess.csproj" />
+    <ProjectReference Include="..\Ksiegarnia.Models\Ksiegarnia.Models.csproj" />
+    <ProjectReference Include="..\Ksiegarnia.Utility\Ksiegarnia.Utility.csproj" />
   </ItemGroup>
 
 </Project>

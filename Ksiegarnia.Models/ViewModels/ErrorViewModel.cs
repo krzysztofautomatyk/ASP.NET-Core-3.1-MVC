@@ -1,6 +1,6 @@
 using System;
 
-namespace Ksiegarnia.Models
+namespace Ksiegarnia.Models.ViewModels
 {
     public class ErrorViewModel
     {
