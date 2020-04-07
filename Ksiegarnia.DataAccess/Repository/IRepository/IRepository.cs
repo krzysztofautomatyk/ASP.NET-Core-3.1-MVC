@@ -6,6 +6,10 @@ using System.Text;
 
 namespace Ksiegarnia.DataAccess.Repository.IRepository
 {
+    /// <summary>
+    /// Interfejs odpowiedzalny za komunikację z bazą danych
+    /// </summary>
+    /// <typeparam name="T">Model(klasa)</typeparam>
     public interface IRepository<T> where T:class
     {
         T Get(int id);
