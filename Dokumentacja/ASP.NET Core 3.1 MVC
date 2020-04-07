@@ -250,5 +250,31 @@ Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation -> paczka odpowiedzialna za to
             dbSet.RemoveRange(entity);
         }
     }"
+53. W projekcie "Ksiegarnia.DataAccess" w katalogu "~Repository\IRepository\" dodaje nowy INTERFACE "ICategoryRepository.cs" i modyfikuje ten plik
+    "public interface ICategoryRepository : IRepository<Kategoria>
+    {
+        void Update(Kategoria kategoria);
+    }"
+54. W projekcie "Ksiegarnia.DataAccess" w katalogu "~Repository\" dodaje nową CLASSę "CategoryRepository.cs" i modyfikuje ten plik
+    " public class CategoryRepository : Repository<Kategoria>, ICategoryRepository
+    {
+        //private readonly DbContext _db;
+        private readonly ApplicationDbContext _db;
 
+        public CategoryRepository(ApplicationDbContext db) : base(db)
+        {
+            _db = db;
+        }
+
+        public void Update(Kategoria kategoria)
+        {
+            var objFormDb = _db.Kategorie.FirstOrDefault(s => s.Id == kategoria.Id);
+            if(objFormDb != null)
+            {
+                objFormDb.Nazwa = kategoria.Nazwa;
+                _db.SaveChanges();
+            }
+
+        }
+    }"
 
