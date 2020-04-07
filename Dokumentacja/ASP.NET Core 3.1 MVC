@@ -116,3 +116,24 @@ Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation -> paczka odpowiedzialna za to
 			<a class="dropdown-item" href="#">Something else here</a>
 		</div>
 	</li>"
+45. W projekcie "Ksiegarnia.Models" dodaje nową klase "~\Kategoria.cs" a w nim model jako tabela:
+    "public class Kategoria
+    {
+        [Key]
+        public int Id { get; set; }
+        
+        [Display(Name="Nazwa Kategorii")]
+        [Required]
+        [MaxLength(50)]
+        public string Nazwa { get; set; }
+
+    }"
+46. W projekcie "Kategoria.DataAccess" edytuje plik "~\Data\ApplicationDbContext.cs" i dodaje wpis o nowej tabeli:
+    "        // Dodaje wpis aby Entity wiedział o nowym modelu => Kategoria
+        public DbSet<Kategoria> Kategorie { get; set; }"
+47. W projekcie "Ksiegarnia.DataAccess" otwieram Package Manager Console i dodaje nową migracje ( w konsoli musi być wybrane w
+    polu "Default project: Ksiegarnia.DataAccess" ):
+    "add-migration DodajeKategorieDoBazy"
+48. W projekcie "Ksiegarnia.DataAccess" otwieram Package Manager Console i aktualizuje bazę danych zgodnie z migracją ( w konsoli musi być wybrane w
+    polu "Default project: Ksiegarnia.DataAccess" ):
+    "update-database"

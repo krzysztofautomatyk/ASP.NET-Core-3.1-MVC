@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Ksiegarnia.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,5 +13,8 @@ namespace Ksiegarnia.DataAccess.Data
             : base(options)
         {
         }
+
+        // Dodaje wpis aby Entity wiedział o nowym modelu => Kategoria
+        public DbSet<Kategoria> Kategorie { get; set; }
     }
 }
