@@ -12,6 +12,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Ksiegarnia.DataAccess.Data;
+using Ksiegarnia.DataAccess.Repository.IRepository;
+using Ksiegarnia.DataAccess.Repository;
 
 namespace Ksiegarnia
 {
@@ -32,6 +34,7 @@ namespace Ksiegarnia
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddControllersWithViews();
             services.AddRazorPages();
         }

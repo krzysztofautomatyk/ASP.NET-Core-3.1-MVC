@@ -279,7 +279,7 @@ Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation -> paczka odpowiedzialna za to
     }"
 55. W projekcie "Kategoria.DataAccess" instaluje paczkę NUGET "Dapper"
 56. W projekcie "Ksiegarnia.DataAccess" w katalogu "~Repository\IRepository\" dodaje nowy INTERFACE "ISP_Call.cs" i modyfikuje ten plik
-    "    public interface ISP_Call :IDisposable
+    "public interface ISP_Call :IDisposable
     {
         // zwraca INT lub BOOL
         T Single<T>(string procedureName, DynamicParameters param = null);
@@ -295,7 +295,7 @@ Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation -> paczka odpowiedzialna za to
         Tuple<IEnumerable<T1>, IEnumerable<T2>> List<T1,T2>(string procedureName, DynamicParameters param = null);
 
     }"
-57. W projekcie "Ksiegarnia.DataAccess" w katalogu "~Repository\" dodaje nową CLASSę "SP_Call.cs.cs" i modyfikuje ten plik
+57. W projekcie "Ksiegarnia.DataAccess" w katalogu "~Repository\" dodaje nową CLASSę "SP_Call.cs" i modyfikuje ten plik
     "public class SP_Call : ISP_Call
     {
         //private readonly DbContext _db;
@@ -367,4 +367,38 @@ Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation -> paczka odpowiedzialna za to
             }
         }
     }"
-58. 
+58. W projekcie "Ksiegarnia.DataAccess" w katalogu "~Repository\IRepository\" dodaje nowy INTERFACE "IUnitOfWork.cs" i modyfikuje ten plik
+    "public interface IUnitOfWork : IDisposable
+    {
+        ICategoryRepository Category { get; }
+
+        ISP_Call SP_Call { get; }
+    }"
+59. W projekcie "Ksiegarnia.DataAccess" w katalogu "~Repository\" dodaje nową CLASSę "UnitOfWork.cs" i modyfikuje ten plik
+    "public class UnitOfWork : IUnitOfWork
+    {
+        private readonly ApplicationDbContext _db;
+
+        public UnitOfWork(ApplicationDbContext db)
+        {
+            _db = db;
+            Category = new CategoryRepository(_db);
+            SP_Call = new SP_Call(_db);
+        }
+
+        public ICategoryRepository Category { get; private set; }
+
+        public ISP_Call SP_Call { get; private set; }
+
+        public void Dispose()
+        {
+            _db.Dispose();
+        }
+
+        public void Save()
+        {
+            _db.SaveChanges();
+        }
+    }"
+60. W projekcie "Ksiegarnia" edytuje plik "~\Startup.cs" w którym dodaje nowy serwis:
+    "services.AddScoped<IUnitOfWork, UnitOfWork>();" 
