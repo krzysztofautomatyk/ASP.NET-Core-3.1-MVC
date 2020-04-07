@@ -402,3 +402,15 @@ Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation -> paczka odpowiedzialna za to
     }"
 60. W projekcie "Ksiegarnia" edytuje plik "~\Startup.cs" w którym dodaje nowy serwis:
     "services.AddScoped<IUnitOfWork, UnitOfWork>();" 
+61. W projekcie "Ksiegarnia" tworzę katalog jeśli nie ma "~\Areas\Admin\Controllers"
+62. TESTOWO - DO POMINIĘCIA 
+    W projekcie "Ksiegarnia" w Areas Admin dodaje nowy kontroller "MVC Controller with views, using Entity Framework"
+	i wypełniam pola w formularzu:
+	- Model class: "Kategoria (Ksiegarnia.Models)"
+	- Data context class: "ApplicationDbContext (Ksiegarnia.DataAccess.Data)"
+	- Use a layout page: "~/Views/Shared/_Layout.cshtml"
+63. TESTOWO - DO POMINIĘCIA 
+    W projekcie "Ksiegarnia" edytuje plik "~\Views\Shared/_Layout.cshtml" i dodaje nowy NAVBAR LINK:
+	"<li class="nav-item">
+		<a class="nav-link text-light" asp-area="Admin" asp-controller="Kategorias" asp-action="Index">Kategorie</a>
+	</li>"
