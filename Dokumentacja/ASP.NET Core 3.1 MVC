@@ -76,3 +76,13 @@ Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation -> paczka odpowiedzialna za to
   - "~\Controllers"
 32. W projekcie "Ksiegarnia" usuwam plik:
   - "~\ScaffoldingReadMe.txt"
+33. Ze strony https://bootswatch.com/ wybieram wygląd, który mnie interesuje i nadpisuje styll css Bootstrapa
+    w katalogu projekcie "Ksiegarnia":
+  - "~\wwwroot\lib\bootstrap\dist\css\bootstrap.css"
+34. W projekcie "Ksiegarnia" edytuje plik "~\Views\Shared/_Layout.cshtml" zmieniam styl z "bootstrap.min.css" na 
+    "bootstrap.css"
+35. Ze strony https://jqueryui.com/datepicker/ pobieram style/skrypty i wypakowuje je w katalogu "~\wwwroot\lib\"
+36. Ze strony https://datatables.net/ pobieram style/skrypty i wypakowuje je w katalogu "~\wwwroot\lib\"
+37. Ze strony https://sweetalert.js.org/guides/ pobieram style/skrypty i wypakowuje je w katalogu "~\wwwroot\lib\"
+38. Ze strony https://fontawesome.com/ pobieram style/skrypty i wypakowuje je w katalogu "~\wwwroot\lib\"
+39. Ze strony https://codeseven.github.io/toastr/ pobieram style/skrypty i wypakowuje je w katalogu "~\wwwroot\lib\"
