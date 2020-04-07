@@ -137,3 +137,5 @@ Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation -> paczka odpowiedzialna za to
 48. W projekcie "Ksiegarnia.DataAccess" otwieram Package Manager Console i aktualizuje bazę danych zgodnie z migracją ( w konsoli musi być wybrane w
     polu "Default project: Ksiegarnia.DataAccess" ):
     "update-database"
+49. W projekcie "Ksiegarnia.DataAccess" tworzę katalog "~\Repository"
+50. W projekcie "Ksiegarnia.DataAccess" tworzę katalog "~\Repository\IRepository"
