@@ -97,3 +97,22 @@ Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation -> paczka odpowiedzialna za to
     <script type="text/javascript" src="~/lib/CodeSeven-toastr/build/toastr.min.js"></script>
     <script src="~/lib/sweetalert/sweetalert.min.js"></script>
     <script src="~/lib/fontawesome-free/js/all.js"></script>"
+41. W projekcie "Ksiegarnia" w pliku "~\appsettings.json" sprawdzam/edytuje połączenie z bazą danych MS SQL
+42. W projekcie "Ksiegarnia.DataAccess" otwieram Package Manager Console i dodaje nową migracje ( w konsoli musi być wybrane w
+    polu "Default project: Ksiegarnia.DataAccess" ):
+    "add-migration FirstInit"
+43. W projekcie "Ksiegarnia.DataAccess" otwieram Package Manager Console i aktualizuje bazę danych zgodnie z migracją ( w konsoli musi być wybrane w
+    polu "Default project: Ksiegarnia.DataAccess" ):
+    "update-database"
+44. W project "Ksiegarnia" w pliku "~\Views\Shared/_Layout.cshtml" dodaje do NAVBARU dodatkowe menu typu DROPDOWN
+    "<li class="nav-item dropdown">
+		<a class="nav-link dropdown-toggle text-light " href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			Dropdown
+		</a>
+		<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+			<a class="dropdown-item" href="#">Action</a>
+			<a class="dropdown-item" href="#">Another action</a>
+			<div class="dropdown-divider"></div>
+			<a class="dropdown-item" href="#">Something else here</a>
+		</div>
+	</li>"

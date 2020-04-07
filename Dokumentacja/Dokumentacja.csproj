@@ -38,5 +38,8 @@
     </None>
     <None Include="ASP.NET Core 3.1 MVC" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
