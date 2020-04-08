@@ -43,7 +43,7 @@ function Delete(url) {
         title: "Czy jesteś pewny/a, że chcesz usunąć to ?",
         text: "Nie będzie możliwe wrócenie do tych danych!",
         icon: "warning",
-        buttons: true,
+        buttons: ["Anuluj", "Usuń"],
         dangerMode: true
     }).then((willDelete) => {
         if (willDelete) {
