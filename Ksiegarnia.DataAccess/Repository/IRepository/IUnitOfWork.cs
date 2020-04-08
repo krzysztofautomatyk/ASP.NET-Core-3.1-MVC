@@ -6,7 +6,9 @@ namespace Ksiegarnia.DataAccess.Repository.IRepository
 {
     public interface IUnitOfWork : IDisposable
     {
-        ICategoryRepository Category { get; }
+        IKategoriaRepository Category { get; }
+
+        IOkladkaRepository Okladka { get; }
 
         ISP_Call SP_Call { get; }
 

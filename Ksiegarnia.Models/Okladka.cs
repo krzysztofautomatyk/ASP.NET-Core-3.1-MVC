@@ -5,12 +5,12 @@ using System.Text;
 
 namespace Ksiegarnia.Models
 {
-    public class Kategoria
+    public class Okladka
     {
         [Key]
         public int Id { get; set; }
         
-        [Display(Name="Nazwa kategorii")]
+        [Display(Name="Nazwa okładki")]
         [Required]
         [MaxLength(50)]
         public string Nazwa { get; set; }

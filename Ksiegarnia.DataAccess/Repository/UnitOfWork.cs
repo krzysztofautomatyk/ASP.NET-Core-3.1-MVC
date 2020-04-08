@@ -14,12 +14,17 @@ namespace Ksiegarnia.DataAccess.Repository
         {
             _db = db;
             Category = new CategoryRepository(_db);
+            Okladka = new OkladkaRepository(_db);
             SP_Call = new SP_Call(_db);
         }
 
-        public ICategoryRepository Category { get; private set; }
+        public IKategoriaRepository Category { get; private set; }
+
+        public IOkladkaRepository Okladka { get; private set; }
 
         public ISP_Call SP_Call { get; private set; }
+
+        
 
         public void Dispose()
         {

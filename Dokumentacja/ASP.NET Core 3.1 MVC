@@ -713,5 +713,22 @@ Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation -> paczka odpowiedzialna za to
 		});
 
 	"
-	
+___________________________________________________________________________________________________________
+___________________________________________________________________________________________________________
+ Kroki aby dodać nowy model
+ 1. W projekcie "Ksiegarnia.Models", kopiuje model "Kategoria.cs" i zmieniam co potrzeba.
+ 2. W projekcie "Ksiegarnia.DataAccess" w "~\Data\ApplicationDbContext.cs" dodaje nowy wpis o nowym modelu.
+ 3. W projekcie "Ksiegarnia.DataAccess", kopiuje i edytuje INTERFACE "~\Repository\IRepository\ICategoryRepository.cs",
+    zmieniam nazwę "...Catgory..." na nazwę mojego modelu.
+ 4. W projekcie "Ksiegarnia.DataAccess", kopiuje i edytuje INTERFACE "~\Repository\CategoryRepository.cs",
+    zmieniam nazwę "...Catgory..." na nazwę mojego modelu.
+ 5. W projekcie "Ksiegarnia.DataAccess" dodaje nowy wpis o nowym modelu w "~\Repository\IRepository\IUnitOfWork.cs". 
+ 6. W projekcie "Ksiegarnia.DataAccess" dodaje dwa nowe wpisy o nowym modelu w "~\Repository\UnitOfWork.cs". 
+ 7. Dodaje migracje i update do bazy danych.
+ 8. W projekcie "Ksiegarnia" kopiuje i edytuje nowy kontroller "~\Areas\Admin\Controllers\".
+ 9. W projekcie "Ksiegarnia" kopiuje i edituje javascript "~\wwwroot\js\category.js";
+ 10. W projekcie "Ksiegarnia" kopiuje i edituje katalog a w nim pliki "~\Areas\Admin\Views\Kategoria"
+ 11. W projekcie "Ksiegarnia" edituje plik "~\Views\Shared/_Layout.cshtml" i dodaje link do nowej Area.
+___________________________________________________________________________________________________________	
+___________________________________________________________________________________________________________	
 	

@@ -16,5 +16,7 @@ namespace Ksiegarnia.DataAccess.Data
 
         // Dodaje wpis aby Entity wiedział o nowym modelu => Kategoria
         public DbSet<Kategoria> Kategorie { get; set; }
+
+        public DbSet<Okladka> Okladki { get; set; }
     }
 }

@@ -5,8 +5,8 @@ using System.Text;
 
 namespace Ksiegarnia.DataAccess.Repository.IRepository
 {
-    public interface IKategoriaRepository : IRepository<Kategoria>
+    public interface IOkladkaRepository : IRepository<Okladka>
     {
-        void Update(Kategoria kategoria);
+        void Update(Okladka okladka);
     }
 }
