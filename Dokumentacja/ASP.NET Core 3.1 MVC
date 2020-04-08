@@ -661,3 +661,57 @@ Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation -> paczka odpowiedzialna za to
     "<a class="btn btn-success text-light " asp-action="Upsert"><i class="fas fa-plus text-light"></i> &nbsp; Utwórz nową kategorie</a>	"
 74. W projekcie "Ksiegarnia.DataAccess" edytuje plik w celu usunięcia(komentarz) z metody "update" funkcji SAVE "~\Repository\CategoryRepository.cs"
 	"//_db.SaveChanges();"
+75. W projekcie "Ksiegarnia" edituje plik "~\Areas\Admin\Controllers\KategoriaController.cs" i dodaje nowe API DELETE:
+    "
+        [HttpDelete]
+        public IActionResult Delete(int id)
+        {
+            var objFromDb = _unitOfWork.Category.Get(id);
+            if(objFromDb == null)
+            {
+                return Json(new { success = false, message = "Błąd podczas usuwania rekordu..." });
+            }
+ 
+            _unitOfWork.Category.Remove(objFromDb);
+            _unitOfWork.Save();
+            return Json(new { success = true, message = "Pomyślnie usunięto rekord." });
+        }
+	"
+76. W projekcie "Ksiegarnia" edytuje skrypt "~\wwwroot\js\category.js" i dodaje w nim fukcje usuń dla przycisku:
+    "<a onclick=Delete("/Admin/Kategoria/Delete/${data}") class="btn btn-danger text-white" style="cursor:pointer">
+		<i class="fas fa-trash-alt"></i>
+	</a>"
+	
+	i funkcje:
+	"
+	//https://sweetalert2.github.io/#examples
+	function Delete(url) {
+		swal({
+			title: "Czy jesteś pewny/a, że chcesz usunąć to ?",
+			text: "Nie będzie możliwe wrócenie do tych danych!",
+			icon: "warning",
+			buttons: true,
+			dangerMode: true
+		}).then((willDelete) => {
+			if (willDelete) {
+				$.ajax({
+					type: "DELETE",
+					url: url,
+					success: function (data) {
+						if (data.success) {
+							toastr.success(data.message);
+							dataTable.ajax.reload();
+						}
+						else {
+							toastr.error(data.message);
+							console.error(
+								"dsasd");
+						}
+					}
+				});
+			}
+		});
+
+	"
+	
+	

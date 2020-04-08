@@ -77,6 +77,20 @@ namespace Ksiegarnia.Areas.Admin.Controllers
             }
             return View(kategoria);
         }
+
+        [HttpDelete]
+        public IActionResult Delete(int id)
+        {
+            var objFromDb = _unitOfWork.Category.Get(id);
+            if(objFromDb == null)
+            {
+                return Json(new { success = false, message = "Błąd podczas usuwania rekordu..." });
+            }
+ 
+            _unitOfWork.Category.Remove(objFromDb);
+            _unitOfWork.Save();
+            return Json(new { success = true, message = "Pomyślnie usunięto rekord." });
+        }
         #endregion
 
     }

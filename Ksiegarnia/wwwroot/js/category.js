@@ -25,7 +25,7 @@ function loadDataTable() {
                                 <a href="/Admin/Kategoria/Upsert/${data}" class="btn btn-success text-white" style="cursor:pointer">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <a class="btn btn-danger text-white" style="cursor:pointer">
+                                <a onclick=Delete("/Admin/Kategoria/Delete/${data}") class="btn btn-danger text-white" style="cursor:pointer">
                                     <i class="fas fa-trash-alt"></i>
                                 </a>
                             </div>
@@ -33,5 +33,35 @@ function loadDataTable() {
                 }, "width": "60%"
             }
         ]
+    });
+}
+
+
+//https://sweetalert2.github.io/#examples
+function Delete(url) {
+    swal({
+        title: "Czy jesteś pewny/a, że chcesz usunąć to ?",
+        text: "Nie będzie możliwe wrócenie do tych danych!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true
+    }).then((willDelete) => {
+        if (willDelete) {
+            $.ajax({
+                type: "DELETE",
+                url: url,
+                success: function (data) {
+                    if (data.success) {
+                        toastr.success(data.message);
+                        dataTable.ajax.reload();
+                    }
+                    else {
+                        toastr.error(data.message);
+                        console.error(
+                            "dsasd");
+                    }
+                }
+            });
+        }
     });
 }
