@@ -373,6 +373,8 @@ Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation -> paczka odpowiedzialna za to
         ICategoryRepository Category { get; }
 
         ISP_Call SP_Call { get; }
+		
+		void Save();
     }"
 59. W projekcie "Ksiegarnia.DataAccess" w katalogu "~Repository\" dodaje nową CLASSę "UnitOfWork.cs" i modyfikuje ten plik
     "public class UnitOfWork : IUnitOfWork
@@ -444,7 +446,7 @@ Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation -> paczka odpowiedzialna za to
 
     }"
 65. W projekcie "Ksiegarnia" dodaje nowy katalog "~\Areas\Admin\Views\Kategoria"
-66. W projekcie "Ksiegarnia: dodaje nowy widok VIEW i wypełniam pola w formularzu:
+66. W projekcie "Ksiegarnia" dodaje nowy widok VIEW w AREA\ADMIN i wypełniam pola w formularzu:
     - View name: "Index"
 	- Template: "Empty (without model)"
 	- Use a layout page: "~/Views/Shared/_Layout.cshtml"
@@ -516,3 +518,146 @@ Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation -> paczka odpowiedzialna za to
     "@section Scripts{
     <script src="~/js/category.js"></script>
 	}"
+69. W projekcie "Ksiegarnia" edituje plik "~\Areas\Admin\Controllers\KategoriaController.cs" i dodaje nowe IACTIONRESULT oraz API:
+		"// Zwraca stronę o nazwie Upsert.cshtml
+		public IActionResult Upsert(int? id)
+		{
+			Kategoria kategoria = new Kategoria();
+			if(id==null)
+			{
+				// jeśli brak id to otwórz stronę do tworzenia nowego wpisu
+				return View(kategoria);
+			}
+
+			// jeżli jest id to oznacza, że otwórz stronę do edycji
+			kategoria = _unitOfWork.Category.Get(id.GetValueOrDefault());
+			if(kategoria == null)
+			{
+				// nie znalazłem wpisu w bazie danych
+				return NotFound();
+			}
+
+			return View(kategoria);
+		}"
+	i w API dodaje
+		"[HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Upsert(Kategoria kategoria)
+        {
+            if(ModelState.IsValid)
+            {
+                if(kategoria.Id == 0)
+                {
+                    _unitOfWork.Category.Add(kategoria);
+                }
+                else
+                {
+                    _unitOfWork.Category.Update(kategoria);
+                }
+                _unitOfWork.Save();
+                //return RedirectToAction("Index");
+                return RedirectToAction(nameof(Index));
+
+            }
+            return View(kategoria);
+        }"
+70. W projekcie "Ksiegarnia" dodaje nowy widok VIEW w AREA\ADMIN i wypełniam pola w formularzu:
+    - View name: "Upsert"
+	- Template: "Empty (without model)"
+	- Use a layout page: "~/Views/Shared/_Layout.cshtml"
+	i edytuje nowy widok:
+	"@*W metodzie wywołującą tą stronę zwracam jej model*@
+	@model Ksiegarnia.Models.Kategoria
+	@{
+		Layout = "~/Views/Shared/_Layout.cshtml";
+		var title = "Utwórz kategorie";
+	}
+
+	<form method="post">
+		<div class="row p-3 border">
+
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+			@if(Model.Id != 0)
+			{
+				//do edycji
+				title = "Edytuj kategorie";
+			}
+
+			<div class="col-12 border-bottom">
+				<h2 class="text-primary">@title</h2>
+			</div>
+			<div class="col-8 pt-4">
+				<div class="form-group row">
+					<div class="col-4">
+
+						@*W naszym modelu mamy -> public string Nazwa { get; set; }*@
+						<label asp-for="Nazwa"></label>
+
+					</div>
+					<div class="col-8">
+
+						<input asp-for="Nazwa" class="form-control" />
+
+						@*W naszym modelu mamy -> [Required]
+												  [MaxLength(50)]*@
+						<span asp-validation-for="Nazwa" class="text-danger"></span>
+
+					</div>
+				</div>
+				<div class="form-group row">
+					<div class="col-8 offset-4">
+
+						@*Korzystam z widoków partial -> _EditAndBackToListButton.cshtml
+													  -> _CreateAndBackToListButton.cshtml*@
+
+						@if (Model.Id != 0)
+						{
+							<partial name="_EditAndBackToListButton" model="Model.Id" />
+						}
+						else
+						{
+							<partial name="_CreateAndBackToListButton" />
+						}
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+
+	@section Scripts{ 
+		<partial name="_ValidationScriptsPartial" />
+	}"
+71. W projekcie "Ksiegarnia" dodaje nowy widok VIEW w "~\Views\Shared\" i wypełniam pola w formularzu:
+    - View name: "_CreateAndBackToListButton"
+	- Template: "Empty (without model)"
+	- Create as a partial view
+	i edytuje nowy widok:
+	"<div class="row">
+		<div class="col">
+			<button type="submit" class="btn btn-primary form-control">Utwórz</button>
+		</div>
+		<div class="col">
+			<a asp-action="Index" class="btn btn-success form-control">Wróc do kategorii</a> 
+		</div>
+	</div>"
+72. W projekcie "Ksiegarnia" dodaje nowy widok VIEW w "~\Views\Shared\" i wypełniam pola w formularzu:
+    - View name: "_EditAndBackToListButton"
+	- Template: "Empty (without model)"
+	- Create as a partial view
+	i edytuje nowy widok:
+	"@*W metodzie wywołującą tą stronę zwracam id jako int*@
+	@model int
+	<div class="row">
+		<div class="col">
+			<button type="submit" class="btn btn-primary form-control" asp-route-id="@Model" >Aktualizuj</button>
+		</div>
+		<div class="col">
+			<a asp-action="Index" class="btn btn-success form-control">Wróc do kategorii</a>
+		</div>
+	</div>"
+73. W projekcie "Ksiegarnia" edytuje link do tworzenia nowej kategorii w pliku "~\Areas\Admin\Views\Kategoria\Index.cshtml"
+    "<a class="btn btn-success text-light " asp-action="Upsert"><i class="fas fa-plus text-light"></i> &nbsp; Utwórz nową kategorie</a>	"
+74. W projekcie "Ksiegarnia.DataAccess" edytuje plik w celu usunięcia(komentarz) z metody "update" funkcji SAVE "~\Repository\CategoryRepository.cs"
+	"//_db.SaveChanges();"

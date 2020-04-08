@@ -21,7 +21,7 @@ namespace Ksiegarnia.DataAccess.Repository
             if(objFormDb != null)
             {
                 objFormDb.Nazwa = kategoria.Nazwa;
-                _db.SaveChanges();
+                //_db.SaveChanges();
             }
 
         }

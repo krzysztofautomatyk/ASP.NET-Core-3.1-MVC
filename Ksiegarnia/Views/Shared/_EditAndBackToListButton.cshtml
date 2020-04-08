@@ -1,0 +1,10 @@
+﻿@*W metodzie wywołującą tą stronę zwracam id jako int*@
+@model int
+<div class="row">
+    <div class="col">
+        <button type="submit" class="btn btn-primary form-control" asp-route-id="@Model" >Aktualizuj</button>
+    </div>
+    <div class="col">
+        <a asp-action="Index" class="btn btn-success form-control">Wróc do kategorii</a>
+    </div>
+</div>
