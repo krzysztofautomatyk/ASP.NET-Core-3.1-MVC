@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Dapper;
 using Ksiegarnia.DataAccess.Repository.IRepository;
 using Ksiegarnia.Models;
+using Ksiegarnia.Utility;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ksiegarnia.Areas.Admin.Controllers
@@ -34,8 +36,14 @@ namespace Ksiegarnia.Areas.Admin.Controllers
             }
 
             // jeżli jest id to oznacza, że otwórz stronę do edycji
-            okladka = _unitOfWork.Okladka.Get(id.GetValueOrDefault());
-            if(okladka == null)
+            //okladka = _unitOfWork.Okladka.Get(id.GetValueOrDefault());
+
+            // STOREDPROCEDURE
+            var parameter = new DynamicParameters();
+            parameter.Add("@Id", id);
+            okladka = _unitOfWork.SP_Call.OneRecord<Okladka>(SD.Proc_Okladka_Get, parameter);
+
+            if (okladka == null)
             {
                 // nie znalazłem wpisu w bazie danych
                 return NotFound();
@@ -52,7 +60,10 @@ namespace Ksiegarnia.Areas.Admin.Controllers
             //return NotFound();
 
             // Zwraca wszystkie kategorie w formacie json
-            var allObj = _unitOfWork.Okladka.GetAll();
+            //var allObj = _unitOfWork.Okladka.GetAll();
+
+            // STOREDPROCEDURE
+            var allObj = _unitOfWork.SP_Call.List<Okladka>(SD.Proc_Okladka_GetAll, null);
             return Json(new { data = allObj });
         }
 
@@ -62,13 +73,22 @@ namespace Ksiegarnia.Areas.Admin.Controllers
         {
             if(ModelState.IsValid)
             {
-                if(okladka.Id == 0)
+                // STOREDPROCEDURE
+                var parameter = new DynamicParameters();
+                parameter.Add(@"Nazwa", okladka.Nazwa);
+
+                if (okladka.Id == 0)
                 {
-                    _unitOfWork.Okladka.Add(okladka);
+                    //_unitOfWork.Okladka.Add(okladka);
+                    // STOREDPROCEDURE
+                    _unitOfWork.SP_Call.Execute(SD.Proc_Okladka_Create, parameter);
                 }
                 else
                 {
-                    _unitOfWork.Okladka.Update(okladka);
+                    //_unitOfWork.Okladka.Update(okladka);
+                    // STOREDPROCEDURE
+                    parameter.Add(@"Id", okladka.Id);
+                    _unitOfWork.SP_Call.Execute(SD.Proc_Okladka_Update, parameter);
                 }
                 _unitOfWork.Save();
                 //return RedirectToAction("Index");
@@ -80,14 +100,22 @@ namespace Ksiegarnia.Areas.Admin.Controllers
 
         [HttpDelete]
         public IActionResult Delete(int id)
-        {
-            var objFromDb = _unitOfWork.Okladka.Get(id);
-            if(objFromDb == null)
+        {         
+            //var objFromDb = _unitOfWork.Okladka.Get(id);
+            // STOREDPROCEDURE
+            var parameter = new DynamicParameters();
+            parameter.Add("@Id", id);
+            var objFromDb = _unitOfWork.SP_Call.OneRecord<Okladka>(SD.Proc_Okladka_Get, parameter);
+            
+            if (objFromDb == null)
             {
                 return Json(new { success = false, message = "Błąd podczas usuwania rekordu..." });
             }
- 
-            _unitOfWork.Okladka.Remove(objFromDb);
+
+            //_unitOfWork.Okladka.Remove(objFromDb);
+            // STOREDPROCEDURE
+            _unitOfWork.SP_Call.Execute(SD.Proc_Okladka_Delete, parameter);
+
             _unitOfWork.Save();
             return Json(new { success = true, message = "Pomyślnie usunięto rekord." });
         }

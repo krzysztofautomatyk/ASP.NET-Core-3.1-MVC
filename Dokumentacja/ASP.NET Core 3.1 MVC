@@ -731,4 +731,174 @@ ________________________________________________________________________________
  11. W projekcie "Ksiegarnia" edituje plik "~\Views\Shared/_Layout.cshtml" i dodaje link do nowej Area.
 ___________________________________________________________________________________________________________	
 ___________________________________________________________________________________________________________	
-	
+ Modyfikacja powodująca komunikacje z bazą danych wykorzystując STOREDPROCEDURE
+ 1. Tworzę nową migracje, która będzie pusta ze względu na brak zmian w modelu.
+ 2. Dodaje w nowej pustej migracji 5 x StoredProcedure:
+	"
+    public partial class storedprocedure : Migration
+    {
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.Sql(@"CREATE PROC usp_GetOkladki 
+                                    AS 
+                                    BEGIN 
+                                     SELECT * FROM   dbo.Okladki 
+                                    END");
+
+            migrationBuilder.Sql(@"CREATE PROC usp_GetOkladka 
+                                    @Id int 
+                                    AS 
+                                    BEGIN 
+                                     SELECT * FROM   dbo.Okladki  WHERE  (Id = @Id) 
+                                    END ");
+
+            migrationBuilder.Sql(@"CREATE PROC usp_UpdateOkladka
+	                                @Id int,
+	                                @Nazwa varchar(100)
+                                    AS 
+                                    BEGIN 
+                                     UPDATE dbo.Okladki
+                                     SET  Nazwa = @Nazwa
+                                     WHERE  Id = @Id
+                                    END");
+
+            migrationBuilder.Sql(@"CREATE PROC usp_DeleteOkladka
+	                                @Id int
+                                    AS 
+                                    BEGIN 
+                                     DELETE FROM dbo.Okladki
+                                     WHERE  Id = @Id
+                                    END");
+
+            migrationBuilder.Sql(@"CREATE PROC usp_CreateOkladka
+                                   @Nazwa varchar(100)
+                                   AS 
+                                   BEGIN 
+                                    INSERT INTO dbo.Okladki(Nazwa)
+                                    VALUES (@Nazwa)
+                                   END");
+        }
+
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.Sql(@"DROP PROCEDURE usp_GetOkladki");
+            migrationBuilder.Sql(@"DROP PROCEDURE usp_GetOkladka");
+            migrationBuilder.Sql(@"DROP PROCEDURE usp_UpdateOkladka");
+            migrationBuilder.Sql(@"DROP PROCEDURE usp_DeleteOkladka");
+            migrationBuilder.Sql(@"DROP PROCEDURE usp_CreateOkladka");
+        }
+    }
+	"
+ 3. Wykonuje update-database.
+ 4. W projekcie "Ksiegarnia.Utility" edytuje plik "~\SD.cs"
+    "    
+    public static class SD
+    {
+        public const string Proc_Okladka_Create = "usp_CreateOkladka";
+        public const string Proc_Okladka_Get = "usp_GetOkladka";
+        public const string Proc_Okladka_GetAll = "usp_GetOkladki";
+        public const string Proc_Okladka_Update = "usp_UpdateOkladka";
+        public const string Proc_Okladka_Delete = "usp_DeleteOkladka";
+    }
+	"
+ 5. W projekcie "Ksiegarnia" edytuje plik "~\Areas\Admin\Controllers\OkladkaController.cs" i modyfikuje API:
+    - UPSERT
+	"
+	public IActionResult Upsert(int? id)
+        {
+            Okladka okladka = new Okladka();
+            if(id==null)
+            {
+                // jeśli brak id to otwórz stronę do tworzenia nowego wpisu
+                return View(okladka);
+            }
+
+            // jeżli jest id to oznacza, że otwórz stronę do edycji
+            //okladka = _unitOfWork.Okladka.Get(id.GetValueOrDefault());
+
+            // STOREDPROCEDURE
+            var parameter = new DynamicParameters();
+            parameter.Add("@Id", id);
+            okladka = _unitOfWork.SP_Call.OneRecord<Okladka>(SD.Proc_Okladka_Get, parameter);
+
+            if (okladka == null)
+            {
+                // nie znalazłem wpisu w bazie danych
+                return NotFound();
+            }
+
+            return View(okladka);
+        }
+	"
+	- API GETALL
+	"
+	[HttpGet]
+	public IActionResult GetAll()
+	{
+		//return NotFound();
+
+		// Zwraca wszystkie kategorie w formacie json
+		//var allObj = _unitOfWork.Okladka.GetAll();
+
+		// STOREDPROCEDURE
+		var allObj = _unitOfWork.SP_Call.List<Okladka>(SD.Proc_Okladka_GetAll, null);
+		return Json(new { data = allObj });
+	}
+	"
+	- API UPSERT
+	"
+	[HttpPost]
+	[ValidateAntiForgeryToken]
+	public IActionResult Upsert(Okladka okladka)
+	{
+		if(ModelState.IsValid)
+		{
+			// STOREDPROCEDURE
+			var parameter = new DynamicParameters();
+			parameter.Add(@"Nazwa", okladka.Nazwa);
+
+			if (okladka.Id == 0)
+			{
+				//_unitOfWork.Okladka.Add(okladka);
+				// STOREDPROCEDURE
+				_unitOfWork.SP_Call.Execute(SD.Proc_Okladka_Create, parameter);
+			}
+			else
+			{
+				//_unitOfWork.Okladka.Update(okladka);
+				// STOREDPROCEDURE
+				parameter.Add(@"Id", okladka.Id);
+				_unitOfWork.SP_Call.Execute(SD.Proc_Okladka_Update, parameter);
+			}
+			_unitOfWork.Save();
+			//return RedirectToAction("Index");
+			return RedirectToAction(nameof(Index));
+
+		}
+		return View(okladka);
+	}
+	"
+	- API DELETE
+	"
+	[HttpDelete]
+	public IActionResult Delete(int id)
+	{         
+		//var objFromDb = _unitOfWork.Okladka.Get(id);
+		// STOREDPROCEDURE
+		var parameter = new DynamicParameters();
+		parameter.Add("@Id", id);
+		var objFromDb = _unitOfWork.SP_Call.OneRecord<Okladka>(SD.Proc_Okladka_Get, parameter);
+		
+		if (objFromDb == null)
+		{
+			return Json(new { success = false, message = "Błąd podczas usuwania rekordu..." });
+		}
+
+		//_unitOfWork.Okladka.Remove(objFromDb);
+		// STOREDPROCEDURE
+		_unitOfWork.SP_Call.Execute(SD.Proc_Okladka_Delete, parameter);
+
+		_unitOfWork.Save();
+		return Json(new { success = true, message = "Pomyślnie usunięto rekord." });
+	}
+	"
