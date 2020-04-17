@@ -15,6 +15,7 @@ namespace Ksiegarnia.DataAccess.Repository
             _db = db;
             Category = new CategoryRepository(_db);
             Okladka = new OkladkaRepository(_db);
+            Produkt = new ProduktRepository(_db);
             SP_Call = new SP_Call(_db);
         }
 
@@ -24,7 +25,8 @@ namespace Ksiegarnia.DataAccess.Repository
 
         public ISP_Call SP_Call { get; private set; }
 
-        
+        public IProduktRepository Produkt { get; private set; }
+
 
         public void Dispose()
         {

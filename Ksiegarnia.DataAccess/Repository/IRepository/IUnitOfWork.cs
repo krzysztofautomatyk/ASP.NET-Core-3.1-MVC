@@ -10,6 +10,8 @@ namespace Ksiegarnia.DataAccess.Repository.IRepository
 
         IOkladkaRepository Okladka { get; }
 
+        IProduktRepository Produkt { get; }
+
         ISP_Call SP_Call { get; }
 
         void Save();

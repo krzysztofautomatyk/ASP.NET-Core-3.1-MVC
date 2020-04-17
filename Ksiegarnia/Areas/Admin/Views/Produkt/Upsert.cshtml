@@ -1,0 +1,163 @@
+﻿@*W metodzie wywołującą tą stronę zwracam jej model*@
+@model Ksiegarnia.Models.ViewModels.ProduktVM
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var title = "Utwórz produkt";
+}
+
+<form method="post" enctype="multipart/form-data">
+    <div class="row p-3 border">
+
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        @if(Model.Produkt.Id != 0)
+        {
+            //do edycji
+            title = "Edytuj produkt";
+            <input type="hidden" asp-for="Produkt.Id" />
+        }
+
+        <div class="col-12 border-bottom">
+            <h2 class="text-primary">@title</h2>
+        </div>
+        <div class="col-8 pt-4">
+            <div class="form-group row">
+                <div class="col-4">
+
+                    @*W naszym modelu mamy -> public string Nazwa { get; set; }*@
+                    <label asp-for="Produkt.Title"></label>
+
+                </div>
+                <div class="col-8">
+
+                    <input asp-for="Produkt.Title" class="form-control" />
+
+                    @*W naszym modelu mamy -> [Required]
+            [MaxLength(50)]*@
+                    <span asp-validation-for="Produkt.Title" class="text-danger"></span>
+
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="Produkt.ISBN"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="Produkt.ISBN" class="form-control" />
+                        <span asp-validation-for="Produkt.ISBN" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="Produkt.Author"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="Produkt.Author" class="form-control" />
+                        <span asp-validation-for="Produkt.Author" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="Produkt.Description"></label>
+                    </div>
+                    <div class="col-8">
+                        <textarea asp-for="Produkt.Description" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="Produkt.ListPrice"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="Produkt.ListPrice" class="form-control" />
+                        <span asp-validation-for="Produkt.ListPrice" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="Produkt.Price"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="Produkt.Price" class="form-control" />
+                        <span asp-validation-for="Produkt.Price" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="Produkt.Price50"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="Produkt.Price50" class="form-control" />
+                        <span asp-validation-for="Produkt.Price50" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="Produkt.Price100"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="Produkt.Price100" class="form-control" />
+                        <span asp-validation-for="Produkt.Price100" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-4">
+                        Katogory
+                    </div>
+                    <div class="col-8">
+                        @Html.DropDownListFor(m => m.Produkt.KategoriaId, Model.ListaKategorii, "-Select a Katogoria",
+                        new { @class = "form-control" })
+                        <span asp-validation-for="Produkt.KategoriaId" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-4">
+                        Okładki
+                    </div>
+                    <div class="col-8">
+                        @Html.DropDownListFor(m => m.Produkt.OkladkaId, Model.ListaOkładek, "-Select a Okładka",
+                        new { @class = "form-control" })
+                        <span asp-validation-for="Produkt.OkladkaId" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-4">
+                        Grafika
+                    </div>
+                    <div class="col-8">
+                        <input type="file" name="files" id="uploadBox" multiple class="form-control" />
+                    </div>
+                </div>
+
+
+                <div class="form-group row">
+                    <div class="col-8 offset-4">
+
+                        @*Korzystam z widoków partial -> _EditAndBackToListButton.cshtml
+                -> _CreateAndBackToListButton.cshtml*@
+
+                        @if (Model.Produkt.Id != 0)
+                        {
+                            <partial name="_EditAndBackToListButton" model="Model.Produkt.Id" />
+                        }
+                        else
+                        {
+                            <div class="row">
+                                <div class="col">
+                                    <button type="submit" onclik="return validateInput()" class="btn btn-primary form-control">Utwórz</button>
+                                </div>
+                                <div class="col">
+                                    <a asp-action="Index" class="btn btn-success form-control">Wróc do kategorii</a>
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+            </div>
+    </div>
+</form>
+
+@section Scripts{ 
+    <partial name="_ValidationScriptsPartial" />
+}

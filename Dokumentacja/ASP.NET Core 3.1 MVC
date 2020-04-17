@@ -902,3 +902,94 @@ ________________________________________________________________________________
 		return Json(new { success = true, message = "Pomyślnie usunięto rekord." });
 	}
 	"
+___________________________________________________________________________________________________________	
+___________________________________________________________________________________________________________	
+ Nowy model Produkty.
+ 1. W projekcie "Ksiegarnia.Models" dodaje nowy model "~\Produkt.cs" i edytuje go:
+    "
+	public class Produkt
+    {
+        [Key]
+        public int Id { get; set; }
+        [Required]
+        public string Title { get; set; }
+        public string Description { get; set; }
+        [Required]
+        public string ISBN { get; set; }
+        [Required]
+        public string Author { get; set; }
+        [Required]
+        [Range(1, 10000)]
+        public double ListPrice { get; set; }
+        [Required]
+        [Range(1, 10000)]
+        public double Price { get; set; }
+        [Required]
+        [Range(1, 10000)]
+        public double Price50 { get; set; }
+        [Required]
+        [Range(1, 10000)]
+        public double Price100 { get; set; }
+        public string ImageUrl { get; set; }
+
+        [Required]
+        public int KategoriaId { get; set; }
+
+        [ForeignKey("KategoriaId")]
+        public Kategoria Kategoria { get; set; }
+
+        [Required]
+        public int OkladkaId { get; set; }
+
+        [ForeignKey("OkladkaId")]
+        public Okladka Okladka { get; set; }
+    }
+	"
+ 2. W projekcie "Kategoria.DataAccess" edytuje plik "~\Data\ApplicationDbContext.cs" i dodaje wpis o nowej tabeli:
+    "
+	public DbSet<Produkt> Produkty { get; set; }
+	"
+ 3. Wykonuje add-migration i update-database.
+ 4. W projekcie "Ksiegarnia.DataAccess" kopiuje/dodaje IProduktRepsitory i ProduktRepository.
+    ProduktRepository:
+    "
+	 public class ProduktRepository : Repository<Produkt>, IProduktRepository
+    {
+        //private readonly DbContext _db;
+        private readonly ApplicationDbContext _db;
+
+        public ProduktRepository(ApplicationDbContext db) : base(db)
+        {
+            _db = db;
+        }
+
+        public void Update(Produkt produkt)
+        {
+            var objFormDb = _db.Produkty.FirstOrDefault(s => s.Id == produkt.Id);
+            if(objFormDb != null)
+            {
+                // image
+                if(produkt.ImageUrl != null)
+                {
+                    objFormDb.ImageUrl = produkt.ImageUrl;
+                }
+                objFormDb.ISBN = produkt.ISBN;
+                objFormDb.Price = produkt.Price;
+                objFormDb.Price50 = produkt.Price50;
+                objFormDb.ListPrice = produkt.ListPrice;
+                objFormDb.Price100 = produkt.Price100;
+                objFormDb.Title = produkt.Title;
+                objFormDb.Description = produkt.Description;
+                objFormDb.KategoriaId = produkt.KategoriaId;
+                objFormDb.Author = produkt.Author;
+                objFormDb.OkladkaId = produkt.OkladkaId;
+
+            }
+            
+        }
+    }
+	"	
+ 5. W projekcie "Ksiegarnia.DataAccess" edituje UnitOfWork i IUnitOfWork.
+ 6. W projekcie "Ksiegarnia" kopiuje/dodaje i modyfikuje nową kontroller w Area.
+ 7. W
+ 
