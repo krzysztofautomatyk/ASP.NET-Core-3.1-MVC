@@ -14,6 +14,9 @@ namespace Ksiegarnia.DataAccess.Repository.IRepository
 
         ISP_Call SP_Call { get; }
 
+        ICompanyRepository Company { get; }
+        IApplicationUserRepository applicationUserRepository { get; }
+
         void Save();
     }
 }
