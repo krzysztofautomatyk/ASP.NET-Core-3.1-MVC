@@ -20,7 +20,7 @@ namespace Ksiegarnia.DataAccess.Repository
             Produkt = new ProduktRepository(_db);
             SP_Call = new SP_Call(_db);
             Company = new CompanyRepository(_db);
-            ApplicationUser = new ApplicationUserRepository(_db);
+            ApplicationUserRepository = new ApplicationUserRepository(_db);
         }
 
         public IKategoriaRepository Category { get; private set; }
@@ -33,7 +33,8 @@ namespace Ksiegarnia.DataAccess.Repository
 
         public ICompanyRepository Company { get; private set; }
 
-        public IApplicationUserRepository ApplicationUser { get; private set; }
+        public IApplicationUserRepository ApplicationUserRepository { get; private set; }
+
 
         public void Dispose()
         {

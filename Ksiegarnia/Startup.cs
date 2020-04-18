@@ -14,6 +14,8 @@ using Microsoft.Extensions.Hosting;
 using Ksiegarnia.DataAccess.Data;
 using Ksiegarnia.DataAccess.Repository.IRepository;
 using Ksiegarnia.DataAccess.Repository;
+using Ksiegarnia.Utility;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace Ksiegarnia
 {
@@ -32,8 +34,9 @@ namespace Ksiegarnia
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddIdentity<IdentityUser, IdentityRole>().AddDefaultTokenProviders()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddSingleton<IEmailSender, EmailSender>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddRazorPages();
