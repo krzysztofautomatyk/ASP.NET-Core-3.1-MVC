@@ -17,13 +17,14 @@ namespace Ksiegarnia.Models
         public string State { get; set; }
         public string PostalCode { get; set; }
 
-        //public int? CompanyId { get; set; }
+        // "?" - zezwala any w bazie to pole mogło być puste
+        public int? CompanyId { get; set; }
 
-        //[ForeignKey("CompanyId")]
-        //public Company Company { get; set; }
+        [ForeignKey("CompanyId")]
+        public Company Company { get; set; }
 
 
-        // "NotMapped" - oznacza że EntityFramework nie dodada tego pola do bazy danych
+         //"NotMapped" - oznacza że EntityFramework nie dodada tego pola do bazy danych
         [NotMapped]
         public string Role { get; set; }
     }
