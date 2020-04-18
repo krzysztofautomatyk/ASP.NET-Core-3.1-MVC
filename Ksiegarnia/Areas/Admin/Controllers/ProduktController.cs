@@ -131,7 +131,24 @@ namespace Ksiegarnia.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
 
             }
-            return View(produktVM.Produkt);
+            else
+            {
+                produktVM.ListaKategorii = _unitOfWork.Category.GetAll().Select(i => new SelectListItem
+                {
+                    Text = i.Nazwa,
+                    Value = i.Id.ToString()
+                });
+                produktVM.ListaOkładek = _unitOfWork.Okladka.GetAll().Select(i => new SelectListItem
+                {
+                    Text = i.Nazwa,
+                    Value = i.Id.ToString()
+                });
+                if (produktVM.Produkt.Id !=0 )
+                {
+                    produktVM.Produkt = _unitOfWork.Produkt.Get(produktVM.Produkt.Id);
+                }
+            }
+            return View(produktVM);
         }
 
         [HttpDelete]
@@ -142,7 +159,15 @@ namespace Ksiegarnia.Areas.Admin.Controllers
             {
                 return Json(new { success = false, message = "Błąd podczas usuwania rekordu..." });
             }
- 
+
+            // To jest dla edycji i musimy wykasować stare obrazy
+            string webRootPath = _hostEnvironment.WebRootPath;
+            var imagePath = Path.Combine(webRootPath, objFromDb.ImageUrl.TrimStart('\\'));
+            if (System.IO.File.Exists(imagePath))
+            {
+                System.IO.File.Delete(imagePath);
+            }
+
             _unitOfWork.Produkt.Remove(objFromDb);
             _unitOfWork.Save();
             return Json(new { success = true, message = "Pomyślnie usunięto rekord." });
