@@ -20,5 +20,7 @@ namespace Ksiegarnia.DataAccess.Data
         public DbSet<Okladka> Okladki { get; set; }
 
         public DbSet<Produkt> Produkty { get; set; }
+
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
     }
 }
