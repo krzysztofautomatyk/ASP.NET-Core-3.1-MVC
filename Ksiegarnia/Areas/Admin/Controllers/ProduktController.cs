@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Ksiegarnia.DataAccess.Repository.IRepository;
 using Ksiegarnia.Models;
 using Ksiegarnia.Models.ViewModels;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -14,10 +16,11 @@ namespace Ksiegarnia.Areas.Admin.Controllers
     public class ProduktController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
-
-        public ProduktController(IUnitOfWork unitOfWork)
+        private readonly IWebHostEnvironment _hostEnvironment;
+        public ProduktController(IUnitOfWork unitOfWork, IWebHostEnvironment hostEnvironment)
         {
             _unitOfWork = unitOfWork;
+            _hostEnvironment = hostEnvironment;
         }
         // Zwraca stronę o nazwie Index.cshtml
         public IActionResult Index()
@@ -74,27 +77,62 @@ namespace Ksiegarnia.Areas.Admin.Controllers
             return Json(new { data = allObj });
         }
 
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public IActionResult Upsert(Produkt produkt)
-        //{
-        //    if(ModelState.IsValid)
-        //    {
-        //        if(produkt.Id == 0)
-        //        {
-        //            _unitOfWork.Produkt.Add(produkt);
-        //        }
-        //        else
-        //        {
-        //            _unitOfWork.Produkt.Update(produkt);
-        //        }
-        //        _unitOfWork.Save();
-        //        //return RedirectToAction("Index");
-        //        return RedirectToAction(nameof(Index));
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Upsert(ProduktVM produktVM)
+        {
+            if (ModelState.IsValid)
+            {
+                string webRootPath = _hostEnvironment.WebRootPath;
+                var files = HttpContext.Request.Form.Files;
+                if(files.Count > 0)
+                {
+                    string fileName = Guid.NewGuid().ToString();
+                    // W katalogu "wwwroot"
+                    var uploads = Path.Combine(webRootPath, @"images\produkty");
+                    var extenstion = Path.GetExtension(files[0].FileName);
 
-        //    }
-        //    return View(produkt);
-        //}
+                    if(produktVM.Produkt.ImageUrl != null)
+                    {
+                        // To jest dla edycji i musimy wykasować stare obrazy
+                        var imagePath = Path.Combine(webRootPath, produktVM.Produkt.ImageUrl.TrimStart('\\'));
+                        if(System.IO.File.Exists(imagePath))
+                        {
+                            System.IO.File.Delete(imagePath);
+                        }
+
+                    }
+                    using (var filesStreams = new FileStream(Path.Combine(uploads, fileName + extenstion), FileMode.Create))
+                    {
+                        files[0].CopyTo(filesStreams);
+                    }
+                    produktVM.Produkt.ImageUrl = @"\images\produkty\" + fileName + extenstion;
+                }
+                else
+                {
+                    // aktualizacja kiedy nie zmieniamy obrazu
+                    if(produktVM.Produkt.Id !=0)
+                    {
+                        Produkt objFromDb = _unitOfWork.Produkt.Get(produktVM.Produkt.Id);
+                        produktVM.Produkt.ImageUrl = objFromDb.ImageUrl;
+                    }
+                }
+
+                if (produktVM.Produkt.Id == 0)
+                {
+                    _unitOfWork.Produkt.Add(produktVM.Produkt);
+                }
+                else
+                {
+                    _unitOfWork.Produkt.Update(produktVM.Produkt);
+                }
+                _unitOfWork.Save();
+                //return RedirectToAction("Index");
+                return RedirectToAction(nameof(Index));
+
+            }
+            return View(produktVM.Produkt);
+        }
 
         [HttpDelete]
         public IActionResult Delete(int id)

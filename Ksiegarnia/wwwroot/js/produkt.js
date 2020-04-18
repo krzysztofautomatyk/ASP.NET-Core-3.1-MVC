@@ -21,7 +21,7 @@ function loadDataTable() {
             { "data": "isbn", "width": "15%" },
             { "data": "price", "width": "15%" },
             { "data": "author", "width": "15%" },
-            { "data": "kategoria.Nazwa", "width": "15%" },
+            { "data": "kategoria.nazwa", "width": "15%" },
             {
                 "data": "id",
                 // Tworzę teraz kolumne gdzie są przyciski

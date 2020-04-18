@@ -27,4 +27,9 @@
     <ProjectReference Include="..\Ksiegarnia.Utility\Ksiegarnia.Utility.csproj" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <Folder Include="wwwroot\images\produkty\" />
+  </ItemGroup>
+
 </Project>
